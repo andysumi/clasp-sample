@@ -1,3 +1,3 @@
 function doGet(e){
-  return ContentService.createTextOutput('Hello, world!!');
+  return ContentService.createTextOutput('Hello, world!!\nHello, clasp!!');
 }
