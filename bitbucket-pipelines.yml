@@ -18,7 +18,8 @@ pipelines:
             - echo $BITBUCKET_BOOKMARK
             - echo $BITBUCKET_PARALLEL_STEP
             - echo $BITBUCKET_PARALLEL_STEP_COUNT
-    master:
+  tags:
+    '*':
       - step:
           caches:
             - node
@@ -27,6 +28,6 @@ pipelines:
             - echo $CRASP_AUTH > ~/.clasprc.json
             - echo $CRASP_CONFIG > .clasp.json
             - npx clasp push
-            - npx clasp version $DESCRIPTION
+            - npx clasp version $BITBUCKET_TAG
             - version=$(npx clasp versions | tail -1  | sed -e "s/^\([0-9]*\).*$/\1/g")
             - npx clasp redeploy $DEPLOYMENT_ID $version "deploy from gitlab-ci by clasp"
