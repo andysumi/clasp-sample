@@ -1,0 +1,1 @@
+[google/clasp](https://github.com/google/clasp)を使ってGAS開発、デプロイの動作確認を行うプロジェクト
