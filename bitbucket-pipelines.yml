@@ -1,23 +1,23 @@
 image: node:9.11.1
 
 pipelines:
-  default:
-    - step:
-        script:
-          - echo $CI
-          - echo $BITBUCKET_BUILD_NUMBER
-          - echo $BITBUCKET_CLONE_DIR
-          - echo $BITBUCKET_COMMIT
-          - echo $BITBUCKET_REPO_OWNER
-          - echo $BITBUCKET_REPO_OWNER_UUID
-          - echo $BITBUCKET_REPO_SLUG
-          - echo $BITBUCKET_REPO_UUID
-          - echo $BITBUCKET_BRANCH
-          - echo $BITBUCKET_TAG
-          - echo $BITBUCKET_BOOKMARK
-          - echo $BITBUCKET_PARALLEL_STEP
-          - echo $BITBUCKET_PARALLEL_STEP_COUNT
   branches:
+    '*':
+      - step:
+          script:
+            - echo $CI
+            - echo $BITBUCKET_BUILD_NUMBER
+            - echo $BITBUCKET_CLONE_DIR
+            - echo $BITBUCKET_COMMIT
+            - echo $BITBUCKET_REPO_OWNER
+            - echo $BITBUCKET_REPO_OWNER_UUID
+            - echo $BITBUCKET_REPO_SLUG
+            - echo $BITBUCKET_REPO_UUID
+            - echo $BITBUCKET_BRANCH
+            - echo $BITBUCKET_TAG
+            - echo $BITBUCKET_BOOKMARK
+            - echo $BITBUCKET_PARALLEL_STEP
+            - echo $BITBUCKET_PARALLEL_STEP_COUNT
     master:
       - step:
           caches:
