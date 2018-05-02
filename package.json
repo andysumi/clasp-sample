@@ -1,0 +1,23 @@
+{
+  "name": "clasp-sample",
+  "version": "1.0.0",
+  "description": "[google/clasp](https://github.com/google/clasp)を使ってGAS開発、デプロイの動作確認を行うプロジェクト",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/andysumi/clasp-sample.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/andysumi/clasp-sample/issues"
+  },
+  "homepage": "https://gitlab.com/andysumi/clasp-sample#README",
+  "devDependencies": {
+    "@google/clasp": "^1.1.5"
+  }
+}
