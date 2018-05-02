@@ -1,9 +1,11 @@
 image: node:9.11.1
 
 pipelines:
-  branches:
+  tags:
     '*':
       - step:
+          name: echo Environment variables
+          deployment: test
           script:
             - echo $CI
             - echo $BITBUCKET_BUILD_NUMBER
@@ -18,11 +20,11 @@ pipelines:
             - echo $BITBUCKET_BOOKMARK
             - echo $BITBUCKET_PARALLEL_STEP
             - echo $BITBUCKET_PARALLEL_STEP_COUNT
-  tags:
-    '*':
       - step:
+          name: deploy to GAS project
           caches:
             - node
+          deployment: production
           script:
             - npm install
             - echo $CRASP_AUTH > ~/.clasprc.json
