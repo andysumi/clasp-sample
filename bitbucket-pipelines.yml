@@ -1,0 +1,34 @@
+image: node:9.11.1
+
+pipelines:
+  default:
+      - step:
+          name: echo
+          script:
+            - echo $CI
+            - echo $BITBUCKET_BUILD_NUMBER
+            - echo $BITBUCKET_CLONE_DIR
+            - echo $BITBUCKET_COMMIT
+            - echo $BITBUCKET_REPO_OWNER
+            - echo $BITBUCKET_REPO_OWNER_UUID
+            - echo $BITBUCKET_REPO_SLUG
+            - echo $BITBUCKET_REPO_UUID
+            - echo $BITBUCKET_BRANCH
+            - echo $BITBUCKET_TAG
+            - echo $BITBUCKET_BOOKMARK
+            - echo $BITBUCKET_PARALLEL_STEP
+            - echo $BITBUCKET_PARALLEL_STEP_COUNT
+  branches:
+    master:
+      - step:
+          name: deploy
+          caches:
+            - node
+          script:
+            - npm install
+            - echo $CRASP_AUTH > ~/.clasprc.json
+            - echo $CRASP_CONFIG > .clasp.json
+            - npx clasp push
+            - npx clasp version $DESCRIPTION
+            - version=$(npx clasp versions | tail -1  | sed -e "s/^\([0-9]*\).*$/\1/g")
+            - npx clasp redeploy $DEPLOYMENT_ID $version "deploy from gitlab-ci by clasp"
