@@ -76,4 +76,6 @@ workflows:
       - deploy:
           filters:
             tags:
-              only: /.*/
+              only: /^v.*/
+            branches:
+              ignore: /.*/
