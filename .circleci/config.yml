@@ -1,14 +1,5 @@
 version: 2
 jobs:
-  build:
-    docker:
-      - image: circleci/node:9.11.1
-    steps:
-      - run:
-          name: Show system information.
-          command: |
-            echo "Node $(node -v)"
-            echo "Npm $(npm -v)"
   echo:
     docker:
       - image: circleci/node:9.11.1
@@ -80,11 +71,7 @@ workflows:
   version: 2
   deploy-app:
     jobs:
-      - build
-          filters:
-            tags:
-              only: /.*/
-      - echo
+      - echo:
           filters:
             tags:
               only: /.*/
