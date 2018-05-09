@@ -77,7 +77,7 @@ workflows:
               only: /.*/
       - deploy:
           requires:
-            - esho
+            - echo
           filters:
             tags:
               only: /^v.*/
