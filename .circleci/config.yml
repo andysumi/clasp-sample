@@ -1,0 +1,79 @@
+version: 2
+jobs:
+  echo:
+    docker:
+      - image: circleci/node:9.11.1
+    steps:
+      - run:
+          name: output environment variable
+          command: |
+            echo $CI
+            echo $CIRCLECI
+            echo $HOME
+            echo $CIRCLE_BRANCH
+            echo $CIRCLE_NODE_TOTAL
+            echo $CIRCLE_NODE_INDEX
+            echo $CIRCLE_BUILD_NUM
+            echo $CIRCLE_PREVIOUS_BUILD_NUM
+            echo $CIRCLE_BUILD_URL
+            echo $CIRCLE_SHA1
+            echo $CIRCLE_SHA1
+            echo $CIRCLE_JOB
+            echo $CIRCLE_WORKING_DIRECTORY
+            echo $CIRCLE_COMPARE_URL
+            echo $CIRCLE_REPOSITORY_URL
+            echo $CIRCLE_PR_NUMBER
+            echo $CIRCLE_PR_REPONAME
+            echo $CIRCLE_PR_USERNAME
+            echo $CIRCLE_PULL_REQUESTS
+            echo $CIRCLE_PULL_REQUEST
+            echo $CI_PULL_REQUESTS
+            echo $CI_PULL_REQUEST
+            echo $CIRCLE_TAG
+            echo $CIRCLE_PROJECT_USERNAME
+            echo $CIRCLE_PROJECT_REPONAME
+            echo $CIRCLE_INTERNAL_TASK_DATA
+            echo $CIRCLE_STAGE
+            echo $CIRCLE_WORKFLOW_ID
+  deploy:
+    docker:
+      - image: circleci/node:9.11.1
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package.json" }}
+          - v1-dependencies-
+      - run:
+          name: install dependencies
+          command: npm install
+      - save_cache:
+          key: v1-dependencies-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+      - run:
+          name: create setting files
+          command: |
+            echo $CRASP_AUTH > ~/.clasprc.json
+            echo $CRASP_CONFIG > .clasp.json
+      - run:
+          name: publish code
+          command: npx clasp push
+      - run:
+          name: create version
+          commend: npx clasp version "deploy from circleci by clasp"
+      - deploy:
+          command: |
+            version=$(npx clasp versions | tail -1  | sed -e "s/^\([0-9]*\).*$/\1/g")
+            npx clasp redeploy $DEPLOYMENT_ID $version "deploy from circleci by clasp"
+workflows:
+  version: 2
+  echo-workflow:
+    jobs:
+      - echo
+  deploy-workflow:
+    jobs:
+      - deploy:
+          filters:
+            branches:
+              only: master
