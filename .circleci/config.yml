@@ -61,7 +61,7 @@ jobs:
           command: npx clasp push
       - run:
           name: create version
-          command: npx clasp version "deploy from circleci by clasp"
+          command: npx clasp version $CIRCLE_TAG
       - deploy:
           command: |
             version=$(npx clasp versions | tail -1  | sed -e "s/^\([0-9]*\).*$/\1/g")
@@ -75,5 +75,5 @@ workflows:
     jobs:
       - deploy:
           filters:
-            branches:
-              only: master
+            tags:
+              only: /.*/
