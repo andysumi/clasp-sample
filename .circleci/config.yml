@@ -63,17 +63,21 @@ jobs:
           name: create version
           command: npx clasp version $CIRCLE_TAG
       - deploy:
+          name: deploy application
           command: |
             version=$(npx clasp versions | tail -1  | sed -e "s/^\([0-9]*\).*$/\1/g")
             npx clasp redeploy $DEPLOYMENT_ID $version "deploy from circleci by clasp"
 workflows:
   version: 2
-  echo-workflow:
+  deploy-app:
     jobs:
       - echo
-  deploy-workflow:
-    jobs:
+          filters:
+            tags:
+              only: /.*/
       - deploy:
+          requires:
+            - esho
           filters:
             tags:
               only: /^v.*/
