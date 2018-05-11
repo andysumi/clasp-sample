@@ -115,3 +115,8 @@ workflows:
       - deploy:
           requires:
             - deploy-approval
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
