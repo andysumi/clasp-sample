@@ -103,7 +103,8 @@ workflows:
               only: /.*/
             branches:
               only: master
-      - deploy:
+      - deploy-approval:
+          type: approval
           requires:
             - upload
           filters:
@@ -111,3 +112,6 @@ workflows:
               only: /^v.*/
             branches:
               ignore: /.*/
+      - deploy:
+          requires:
+            - deploy-approval
