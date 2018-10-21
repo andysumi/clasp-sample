@@ -1,11 +1,8 @@
 image: node:8.12.0
-
 pipelines:
-
   default:
     - step:
         name: echo Environment variables
-        deployment: test
         script:
           - echo $CI
           - echo $BITBUCKET_BUILD_NUMBER
@@ -30,23 +27,14 @@ pipelines:
           - echo $CRASP_CONFIG > .clasp.json
     - step:
         name: test lint
-        deployment: test
         script:
           - npx eslint src
-
-  branches:
-    master:
-      - step:
-          name: upload files
-          deployment: production
-          script:
-            - npx clasp push
-
-  tags:
-    v.*:
-      - step:
-          name: create new version
-          deployment: production
-          script:
-            - change_log=$(tail -1 version_history | sed -e "s/^[0-9]*[[:blank:]]-[[:blank:]]\(.*\)$/\1/g")
-            - npx clasp version ${change_log}
+    - step:
+        name: upload files
+        script:
+          - npx clasp push
+    - step:
+        name: create new version
+        script:
+          - change_log=$(tail -1 version_history | sed -e "s/^[0-9]*[[:blank:]]-[[:blank:]]\(.*\)$/\1/g")
+          - npx clasp version ${change_log}
