@@ -1,35 +1,52 @@
-image: node:9.11.1
+image: node:8.12.0
 
 pipelines:
-  tags:
-    '*':
+
+  default:
+    - step:
+        name: echo Environment variables
+        deployment: test
+        script:
+          - echo $CI
+          - echo $BITBUCKET_BUILD_NUMBER
+          - echo $BITBUCKET_CLONE_DIR
+          - echo $BITBUCKET_COMMIT
+          - echo $BITBUCKET_REPO_OWNER
+          - echo $BITBUCKET_REPO_OWNER_UUID
+          - echo $BITBUCKET_REPO_SLUG
+          - echo $BITBUCKET_REPO_UUID
+          - echo $BITBUCKET_BRANCH
+          - echo $BITBUCKET_TAG
+          - echo $BITBUCKET_BOOKMARK
+          - echo $BITBUCKET_PARALLEL_STEP
+          - echo $BITBUCKET_PARALLEL_STEP_COUNT
+    - step:
+        name: initial setting
+        cache:
+          - node
+        script:
+          - npm install
+          - echo $CRASP_AUTH > ~/.clasprc.json
+          - echo $CRASP_CONFIG > .clasp.json
+    - step:
+        name: test lint
+        deployment: test
+        script:
+          - npx eslint src
+
+  branches:
+    master:
       - step:
-          name: echo Environment variables
-          deployment: test
-          script:
-            - echo $CI
-            - echo $BITBUCKET_BUILD_NUMBER
-            - echo $BITBUCKET_CLONE_DIR
-            - echo $BITBUCKET_COMMIT
-            - echo $BITBUCKET_REPO_OWNER
-            - echo $BITBUCKET_REPO_OWNER_UUID
-            - echo $BITBUCKET_REPO_SLUG
-            - echo $BITBUCKET_REPO_UUID
-            - echo $BITBUCKET_BRANCH
-            - echo $BITBUCKET_TAG
-            - echo $BITBUCKET_BOOKMARK
-            - echo $BITBUCKET_PARALLEL_STEP
-            - echo $BITBUCKET_PARALLEL_STEP_COUNT
-      - step:
-          name: deploy to GAS project
-          caches:
-            - node
+          name: upload files
           deployment: production
           script:
-            - npm install
-            - echo $CRASP_AUTH > ~/.clasprc.json
-            - echo $CRASP_CONFIG > .clasp.json
             - npx clasp push
-            - npx clasp version $BITBUCKET_TAG
-            - version=$(npx clasp versions | tail -1  | sed -e "s/^\([0-9]*\).*$/\1/g")
-            - npx clasp redeploy $DEPLOYMENT_ID $version "deploy from gitlab-ci by clasp"
+
+  tags:
+    v.*:
+      - step:
+          name: create new version
+          deployment: production
+          script:
+            - change_log=$(tail -1 version_history | sed -e "s/^[0-9]*[[:blank:]]-[[:blank:]]\(.*\)$/\1/g")
+            - npx clasp version ${change_log}
