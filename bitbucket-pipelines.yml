@@ -1,5 +1,7 @@
 image: node:8.12.0
+
 pipelines:
+
   default:
     - step:
         name: echo Environment variables
@@ -29,20 +31,26 @@ pipelines:
           - node
         script:
           - npx eslint code.js
-    - step:
-        name: upload files
-        caches:
-          - node
-        script:
-          - echo $CRASP_AUTH > ~/.clasprc.json
-          - echo $CRASP_CONFIG > .clasp.json
-          - npx clasp push
-    - step:
-        name: create new version
-        caches:
-          - node
-        script:
-          - echo $CRASP_AUTH > ~/.clasprc.json
-          - echo $CRASP_CONFIG > .clasp.json
-          - change_log=$(tail -1 version_history | sed -e "s/^[0-9]*[[:blank:]]-[[:blank:]]\(.*\)$/\1/g")
-          - npx clasp version ${change_log}
+
+  branches:
+    master:
+      - step:
+          name: upload files
+          caches:
+            - node
+          script:
+            - echo $CRASP_AUTH > ~/.clasprc.json
+            - echo $CRASP_CONFIG > .clasp.json
+            - npx clasp push
+
+  tags:
+    '*':
+      - step:
+          name: create new version
+          caches:
+            - node
+          script:
+            - echo $CRASP_AUTH > ~/.clasprc.json
+            - echo $CRASP_CONFIG > .clasp.json
+            - change_log=$(tail -1 version_history | sed -e "s/^[0-9]*[[:blank:]]-[[:blank:]]\(.*\)$/\1/g")
+            - npx clasp version ${change_log}
