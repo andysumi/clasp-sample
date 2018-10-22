@@ -19,8 +19,6 @@ pipelines:
           - echo $BITBUCKET_PARALLEL_STEP_COUNT
     - step:
         name: initial setting
-        cache:
-          - node
         script:
           - npm install
           - echo $CRASP_AUTH > ~/.clasprc.json
