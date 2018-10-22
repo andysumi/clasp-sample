@@ -18,13 +18,11 @@ pipelines:
           - echo $BITBUCKET_PARALLEL_STEP
           - echo $BITBUCKET_PARALLEL_STEP_COUNT
     - step:
-        name: initial setting
+        name: npm install
         caches:
           - node
         script:
           - npm install
-          - echo $CRASP_AUTH > ~/.clasprc.json
-          - echo $CRASP_CONFIG > .clasp.json
     - step:
         name: test lint
         caches:
@@ -36,11 +34,15 @@ pipelines:
         caches:
           - node
         script:
+          - echo $CRASP_AUTH > ~/.clasprc.json
+          - echo $CRASP_CONFIG > .clasp.json
           - npx clasp push
     - step:
         name: create new version
         caches:
           - node
         script:
+          - echo $CRASP_AUTH > ~/.clasprc.json
+          - echo $CRASP_CONFIG > .clasp.json
           - change_log=$(tail -1 version_history | sed -e "s/^[0-9]*[[:blank:]]-[[:blank:]]\(.*\)$/\1/g")
           - npx clasp version ${change_log}
