@@ -75,7 +75,7 @@ echo-environment-variables:
 test-lint:
   stage: test
   script:
-    - npx eslint src
+    - npx eslint code.js
   only:
     - branches
 
