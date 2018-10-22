@@ -27,6 +27,7 @@ pipelines:
           - npm install
     - step:
         name: test lint
+        deployment: test
         caches:
           - node
         script:
@@ -35,7 +36,21 @@ pipelines:
   branches:
     master:
       - step:
+          name: npm install
+          caches:
+            - node
+          script:
+            - npm install
+      - step:
+          name: test lint
+          deployment: test
+          caches:
+            - node
+          script:
+            - npx eslint code.js
+      - step:
           name: upload files
+          deployment: production
           caches:
             - node
           script:
@@ -47,6 +62,7 @@ pipelines:
     '*':
       - step:
           name: create new version
+          deployment: production
           caches:
             - node
           script:
