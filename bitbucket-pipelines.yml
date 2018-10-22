@@ -19,20 +19,28 @@ pipelines:
           - echo $BITBUCKET_PARALLEL_STEP_COUNT
     - step:
         name: initial setting
+        cache:
+          - node
         script:
           - npm install
           - echo $CRASP_AUTH > ~/.clasprc.json
           - echo $CRASP_CONFIG > .clasp.json
     - step:
         name: test lint
+        cache:
+          - node
         script:
           - npx eslint code.js
     - step:
         name: upload files
+        cache:
+          - node
         script:
           - npx clasp push
     - step:
         name: create new version
+        cache:
+          - node
         script:
           - change_log=$(tail -1 version_history | sed -e "s/^[0-9]*[[:blank:]]-[[:blank:]]\(.*\)$/\1/g")
           - npx clasp version ${change_log}
