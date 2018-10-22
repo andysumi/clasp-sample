@@ -28,7 +28,7 @@ pipelines:
     - step:
         name: test lint
         script:
-          - npx eslint src
+          - npx eslint code.js
     - step:
         name: upload files
         script:
