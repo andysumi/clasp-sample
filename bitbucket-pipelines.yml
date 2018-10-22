@@ -61,6 +61,15 @@ pipelines:
   tags:
     '*':
       - step:
+          name: upload files
+          deployment: production
+          caches:
+            - node
+          script:
+            - echo $CRASP_AUTH > ~/.clasprc.json
+            - echo $CRASP_CONFIG > .clasp.json
+            - npx clasp push
+      - step:
           name: create new version
           deployment: production
           caches:
